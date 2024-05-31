@@ -18,3 +18,7 @@ local opts={}
 require("vim-options")
 require("lazy").setup("plugins")
 
+
+-- Enable system clipboard integration
+vim.opt.clipboard:append("unnamedplus")
+

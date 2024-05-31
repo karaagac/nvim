@@ -14,3 +14,4 @@ vim.cmd('nnoremap <leader>k <Cmd>bd<CR>')
 -- Map the write command to <Leader>w
 vim.cmd('nnoremap <leader>w <Cmd>w<CR>')
 
+
