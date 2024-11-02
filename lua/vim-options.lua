@@ -21,3 +21,6 @@ vim.cmd('nnoremap <leader>w <Cmd>w<CR>')
 
 -- Map <Leader>r to compile and run the current Java file
 vim.cmd('nnoremap <leader>r <Cmd>!javac % && java %<CR>')
+
+-- Map <Leader>c to copy the full folder path of the current file
+vim.cmd('nnoremap <leader>c :let @+=expand("%:p:h")<CR>')
