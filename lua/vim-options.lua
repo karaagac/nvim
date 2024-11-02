@@ -1,8 +1,12 @@
-
+-- Set tab settings
 vim.cmd("set expandtab")
 vim.cmd("set tabstop=2")
 vim.cmd("set softtabstop=2")
 vim.cmd("set shiftwidth=2")
+
+-- Enable absolute line numbers
+vim.cmd("set number")              -- Show absolute line numbers
+
 vim.g.mapleader=" "
 
 -- Map the quit without saving command to <Leader>q
