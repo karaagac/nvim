@@ -4,8 +4,8 @@ vim.cmd("set tabstop=2")
 vim.cmd("set softtabstop=2")
 vim.cmd("set shiftwidth=2")
 
--- Enable absolute line numbers
-vim.cmd("set number")              -- Show absolute line numbers
+-- Enable relative line numbers
+vim.cmd("set relativenumber")
 
 -- Set leader key
 vim.g.mapleader = " "
