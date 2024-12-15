@@ -21,3 +21,9 @@ vim.cmd('nnoremap <leader>w <Cmd>w<CR>')
 
 -- Map the open current buffer in Eclipse command to <Leader>o
 vim.cmd('nnoremap <leader>o <Cmd>!open -a "Eclipse Java" %<CR>')
+
+-- Compile the current Java file
+vim.cmd('nnoremap <leader>c <Cmd>w !javac %<CR>')
+
+-- Run the current Java file
+vim.cmd('nnoremap <leader>r <Cmd>w !java %:r<CR>')
