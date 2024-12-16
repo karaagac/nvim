@@ -27,3 +27,6 @@ vim.cmd('nnoremap <leader>c <Cmd>w !javac %<CR>')
 
 -- Run the current Java file
 vim.cmd('nnoremap <leader>r <Cmd>w !java %:r<CR>')
+
+-- copy full path of current file
+vim.api.nvim_set_keymap('n', '<leader>p', ':let @+ = expand("%:p")<CR>', { noremap = true, silent = true })
