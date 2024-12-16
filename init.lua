@@ -21,3 +21,12 @@ require("lazy").setup("plugins")
 
 -- Enable system clipboard integration
 vim.opt.clipboard:append("unnamedplus")
+
+-- Load the Java runner Lua module (Make sure the path is correct)
+local java_runner = require('custom.java_runner')
+
+-- Command to run Java with floating output
+vim.api.nvim_create_user_command('RunJavaWithFloatingOutput', java_runner.compile_and_run_java_with_floating_output, {})
+
+-- Keybinding (e.g., <leader>rf to run Java)
+vim.api.nvim_set_keymap('n', '<leader>rf', ':lua require("custom.java_runner").compile_and_run_java_with_floating_output()<CR>', { noremap = true, silent = true })
