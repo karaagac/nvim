@@ -7,7 +7,7 @@ local function open_floating_output_window(output)
   -- Define window options (size, position, border)
   local opts = {
     relative = 'editor',
-    width = 80,
+    width = 120,
     height = 20,
     col = 10,
     row = 5,
