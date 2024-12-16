@@ -30,3 +30,11 @@ vim.api.nvim_create_user_command('RunJavaWithFloatingOutput', java_runner.compil
 
 -- Keybinding (e.g., <leader>rf to run Java)
 vim.api.nvim_set_keymap('n', '<leader>rf', ':lua require("custom.java_runner").compile_and_run_java_with_floating_output()<CR>', { noremap = true, silent = true })
+
+
+
+-- search local java doc api files
+local java_api_search = require('custom.java_api_search')  -- Adjust to your path
+
+-- Map leader+d to search Java API docs
+vim.keymap.set('n', '<leader>d', java_api_search.search_java_api_docs, { desc = "Search Java API Docs" })
