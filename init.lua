@@ -22,6 +22,17 @@ require("lazy").setup("plugins")
 -- Enable system clipboard integration
 vim.opt.clipboard:append("unnamedplus")
 
+-- Create an augroup for auto-indentation
+vim.api.nvim_create_augroup("AutoIndent", { clear = true })
+
+-- Auto-indentation on file save
+vim.api.nvim_create_autocmd("BufWritePre", {
+  group = "AutoIndent",
+  pattern = "*",
+  command = "normal! gg=G",  -- This will indent the entire file
+})
+-- =======================================
+
 -- Load the Java runner Lua module (Make sure the path is correct)
 local java_runner = require('custom.java_runner')
 
