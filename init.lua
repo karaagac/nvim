@@ -30,17 +30,14 @@ vim.o.ignorecase = true
 -- Optionally, disable smartcase for strict case-insensitivity
 vim.o.smartcase = false
 
+vim.opt.wrap = true        -- Enable line wrapping
+vim.opt.linebreak = true   -- Break lines at word boundaries
+vim.opt.list = false       -- Ensure 'list' mode is off
+
 -- Create an augroup for auto-indentation
 vim.api.nvim_create_augroup("AutoIndent", { clear = true })
 
--- Auto-indentation on file save
-vim.api.nvim_create_autocmd("BufWritePre", {
-  group = "AutoIndent",
-  pattern = "*",
-  command = "normal! gg=G",  -- This will indent the entire file
-})
 -- =======================================
-
 -- Load the Java runner Lua module (Make sure the path is correct)
 local java_runner = require('custom.java_runner')
 
@@ -63,3 +60,16 @@ vim.api.nvim_set_keymap('n', '<C-n>', ':cnext<CR>', { noremap = true, silent = t
 
 -- Map Ctrl+p to :cprev (previous quickfix item)
 vim.api.nvim_set_keymap('n', '<C-p>', ':cprev<CR>', { noremap = true, silent = true })
+
+-- ==========================================
+-- Auto-indentation on file save with the cursor restored to original position
+vim.api.nvim_create_autocmd("BufWritePost", {
+  group = "AutoIndent",   -- You can define a group for this autocmd
+  pattern = "*",          -- Apply this to all file types
+  callback = function()
+    -- Restore the cursor to its original position after saving
+    local current_cursor_pos = vim.api.nvim_win_get_cursor(0)
+    vim.api.nvim_win_set_cursor(0, current_cursor_pos)
+  end
+})
+-- ==========================================
