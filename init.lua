@@ -18,6 +18,9 @@ local opts={}
 require("vim-options")
 require("lazy").setup("plugins")
 
+-- set colorscheme
+vim.cmd.colorscheme "catppuccin"
+
 -- make tab 4 spaces
 vim.opt.shiftwidth = 4
 
