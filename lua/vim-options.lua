@@ -7,6 +7,25 @@ vim.cmd("set shiftwidth=2")
 -- Enable relative line numbers
 vim.cmd("set relativenumber")
 
+-- make tab 4 spaces
+vim.opt.shiftwidth = 4
+
+-- Enable system clipboard integration
+vim.opt.clipboard:append("unnamedplus")
+
+-- Set ignorecase for case-insensitive search
+vim.o.ignorecase = true
+
+-- Optionally, disable smartcase for strict case-insensitivity
+vim.o.smartcase = false
+
+vim.opt.wrap = true        -- Enable line wrapping
+vim.opt.linebreak = true   -- Break lines at word boundaries
+vim.opt.list = false       -- Ensure 'list' mode is off
+
+-- Create an augroup for auto-indentation
+vim.api.nvim_create_augroup("AutoIndent", { clear = true })
+
 -- Set leader key
 vim.g.mapleader = " "
 
@@ -30,3 +49,12 @@ vim.cmd('nnoremap <leader>r <Cmd>w !java %:r<CR>')
 
 -- copy full path of current file
 vim.api.nvim_set_keymap('n', '<leader>p', ':let @+ = expand("%:p")<CR>', { noremap = true, silent = true })
+
+
+-- Quickfix related
+
+-- Map Ctrl+n to :cnext (next quickfix item)
+vim.api.nvim_set_keymap('n', '<C-n>', ':cnext<CR>', { noremap = true, silent = true })
+
+-- Map Ctrl+p to :cprev (previous quickfix item)
+vim.api.nvim_set_keymap('n', '<C-p>', ':cprev<CR>', { noremap = true, silent = true })

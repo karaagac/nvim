@@ -21,25 +21,6 @@ require("lazy").setup("plugins")
 -- set colorscheme
 vim.cmd.colorscheme "catppuccin"
 
--- make tab 4 spaces
-vim.opt.shiftwidth = 4
-
--- Enable system clipboard integration
-vim.opt.clipboard:append("unnamedplus")
-
--- Set ignorecase for case-insensitive search
-vim.o.ignorecase = true
-
--- Optionally, disable smartcase for strict case-insensitivity
-vim.o.smartcase = false
-
-vim.opt.wrap = true        -- Enable line wrapping
-vim.opt.linebreak = true   -- Break lines at word boundaries
-vim.opt.list = false       -- Ensure 'list' mode is off
-
--- Create an augroup for auto-indentation
-vim.api.nvim_create_augroup("AutoIndent", { clear = true })
-
 -- =======================================
 -- Load the Java runner Lua module (Make sure the path is correct)
 local java_runner = require('custom.java_runner')
@@ -55,14 +36,6 @@ local java_api_search = require('custom.java_api_search')  -- Adjust to your pat
 
 -- Map leader+d to search Java API docs
 vim.keymap.set('n', '<leader>d', java_api_search.search_java_api_docs, { desc = "Search Java API Docs" })
-
--- Quickfix related
-
--- Map Ctrl+n to :cnext (next quickfix item)
-vim.api.nvim_set_keymap('n', '<C-n>', ':cnext<CR>', { noremap = true, silent = true })
-
--- Map Ctrl+p to :cprev (previous quickfix item)
-vim.api.nvim_set_keymap('n', '<C-p>', ':cprev<CR>', { noremap = true, silent = true })
 
 -- ==========================================
 -- Auto-indentation on file save with the cursor restored to original position
