@@ -41,9 +41,15 @@ return {
         },
       })
 
-      -- Manual setup for jdtls (Java)
+      -- 🔧 Manual setup for jdtls (Java) with platform-agnostic path
+      local jdtls_path = vim.fn.exepath("jdtls")
+      if jdtls_path == "" then
+        vim.notify("jdtls not found in PATH", vim.log.levels.ERROR)
+        return
+      end
+
       lspconfig.jdtls.setup({
-        cmd = { "/opt/homebrew/bin/jdtls" },
+        cmd = { jdtls_path },
         root_dir = function(fname)
           return vim.fs.dirname(vim.fs.find({ "gradlew", ".git", "mvnw" }, { upward = true })[1])
         end,
@@ -55,7 +61,7 @@ return {
   {
     "neovim/nvim-lspconfig",
     config = function()
-      -- Keymaps for LSP (can be moved to on_attach if needed)
+      -- Keymaps for LSP
       vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
       vim.keymap.set("n", "gd", vim.lsp.buf.definition, {})
       vim.keymap.set("n", "v", vim.lsp.buf.code_action, {})
