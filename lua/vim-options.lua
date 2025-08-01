@@ -50,6 +50,10 @@ vim.cmd('nnoremap <leader>r <Cmd>w !java %<CR>')
 -- copy full path of current file
 vim.api.nvim_set_keymap('n', '<leader>p', ':let @+ = expand("%:p")<CR>', { noremap = true, silent = true })
 
+-- format the documents
+vim.keymap.set("n", "<leader>df", function()
+ vim.lsp.buf.format()
+end, { noremap = true, silent = true, desc = "Format Code" })
 
 -- Quickfix related
 
