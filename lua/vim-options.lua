@@ -55,6 +55,10 @@ vim.keymap.set("n", "<leader>df", function()
  vim.lsp.buf.format()
 end, { noremap = true, silent = true, desc = "Format Code" })
 
+-- open java E (on the left side) error/diagnostics popup to see java errors
+vim.keymap.set('n', '<leader>p', vim.diagnostic.open_float, { noremap = true, silent = true })
+
+
 -- Quickfix related
 
 -- Map Ctrl+n to :cnext (next quickfix item)
