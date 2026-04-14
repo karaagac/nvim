@@ -1,51 +1,89 @@
--- https://www.youtube.com/watch?v=4zyZ3sw_ulc&list=PLsz00TDipIffreIaUNk64KxTIkQaGguqn&index=2
+vim.o.number = true
+vim.o.relativenumber = true
+vim.cmd.colorscheme("catppuccin")
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
+vim.o.wildmenu = true
+vim.o.wildmode = "longest:full,full"
+vim.opt.complete = vim.opt.complete + "k" --for path completion
+vim.opt.path:append("**")
+vim.opt.wildignore:append("*.o,*.obj,*.png,*.jpg,*.gif,node_modules/*")
 
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not (vim.uv or vim.loop).fs_stat(lazypath) then
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
-    lazypath,
+-- WRITE file
+vim.keymap.set("n", "<leader>w", "<cmd>w<cr>", { desc = "Save file" })
+
+-- QUIT Neovim
+vim.keymap.set("n", "<leader>q", "<cmd>qa<cr>", { desc = "Quit Neovim" })
+
+-- KILL (close) current buffer
+vim.keymap.set("n", "<leader>k", "<cmd>bd<cr>", { desc = "Kill buffer" })
+
+
+-- Package Manager----------------------------------
+vim.pack.add{
+	'https://github.com/neovim/nvim-lspconfig.git',
+	'https://github.com/stevearc/oil.nvim.git',
+	'https://github.com/nvim-telescope/telescope.nvim',
+	'https://github.com/nvim-lua/plenary.nvim',
+	--render markdown plugin
+	'https://github.com/nvim-treesitter/nvim-treesitter',
+    	'https://github.com/nvim-mini/mini.nvim',            -- if you use the mini.nvim suite
+    	-- 'https://github.com/nvim-mini/mini.icons',        -- if you use standalone mini plugins
+    	-- 'https://github.com/nvim-tree/nvim-web-devicons', -- if you prefer nvim-web-devicons
+   	'https://github.com/MeanderingProgrammer/render-markdown.nvim'
+}
+
+-- Oil is file explorer. use as :Oil  if you want to go to upper level use -
+require("oil").setup()
+
+-- Telescope setup and settings--------------------
+require("telescope").setup({})
+-- 3. Keymaps (AFTER setup)
+local builtin = require("telescope.builtin")
+
+vim.keymap.set("n", "<leader>ff", builtin.find_files)
+vim.keymap.set("n", "<leader>fg", builtin.live_grep)
+vim.keymap.set("n", "<leader>fb", builtin.buffers)
+-- ================================================
+
+-- markdown link add:
+local builtin = require("telescope.builtin")
+
+local function insert_markdown_link()
+  builtin.find_files({
+    attach_mappings = function(prompt_bufnr, map)
+      local actions = require("telescope.actions")
+      local action_state = require("telescope.actions.state")
+
+      local function open_and_insert()
+        local selection = action_state.get_selected_entry()
+        actions.close(prompt_bufnr)
+
+        if not selection then return end
+
+        local path = selection[1]
+
+        -- extract filename for display text
+        local name = vim.fn.fnamemodify(path, ":t")
+
+        local md = string.format("[%s](%s)", name, path)
+
+        vim.api.nvim_put({ md }, "c", false, true)
+      end
+
+      map("i", "<CR>", open_and_insert)
+      map("n", "<CR>", open_and_insert)
+
+      return true
+    end,
   })
 end
-vim.opt.rtp:prepend(lazypath)
 
-local opts={}
+-- Insert markdown style link of file without adding [name](~/name) etc. Just leader ml
+vim.keymap.set("n", "<leader>ml", insert_markdown_link, { desc = "Insert markdown link" })
 
-require("vim-options")
-require("lazy").setup("plugins")
-
--- set colorscheme
-vim.cmd.colorscheme "catppuccin"
-
--- =======================================
--- Load the Java runner Lua module (Make sure the path is correct)
-local java_runner = require('custom.java_runner')
-
--- Command to run Java with floating output
-vim.api.nvim_create_user_command('RunJavaWithFloatingOutput', java_runner.compile_and_run_java_with_floating_output, {})
-
--- Keybinding (e.g., <leader>rf to run Java)
-vim.api.nvim_set_keymap('n', '<leader>rf', ':lua require("custom.java_runner").compile_and_run_java_with_floating_output()<CR>', { noremap = true, silent = true })
-
--- search local java doc api files
-local java_api_search = require('custom.java_api_search')  -- Adjust to your path
-
--- Map leader+d to search Java API docs
-vim.keymap.set('n', '<leader>d', java_api_search.search_java_api_docs, { desc = "Search Java API Docs" })
-
--- ==========================================
--- Auto-indentation on file save with the cursor restored to original position
-vim.api.nvim_create_autocmd("BufWritePost", {
-  group = "AutoIndent",   -- You can define a group for this autocmd
-  pattern = "*",          -- Apply this to all file types
-  callback = function()
-    -- Restore the cursor to its original position after saving
-    local current_cursor_pos = vim.api.nvim_win_get_cursor(0)
-    vim.api.nvim_win_set_cursor(0, current_cursor_pos)
-  end
-})
--- ==========================================
+-- go to file while on the link with gx
+vim.keymap.set("n", "gx", function()
+  local file = vim.fn.expand("<cfile>")
+  vim.cmd("edit " .. file)
+end, { desc = "Open file under cursor" })
