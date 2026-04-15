@@ -20,21 +20,13 @@ vim.keymap.set("n", "<leader>k", "<cmd>bd<cr>", { desc = "Kill buffer" })
 
 
 -- Package Manager----------------------------------
-vim.pack.add{
-	'https://github.com/neovim/nvim-lspconfig.git',
-	'https://github.com/stevearc/oil.nvim.git',
-	'https://github.com/nvim-telescope/telescope.nvim',
-	'https://github.com/nvim-lua/plenary.nvim',
-	--render markdown plugin
-	'https://github.com/nvim-treesitter/nvim-treesitter',
-    	'https://github.com/nvim-mini/mini.nvim',            -- if you use the mini.nvim suite
-    	-- 'https://github.com/nvim-mini/mini.icons',        -- if you use standalone mini plugins
-    	-- 'https://github.com/nvim-tree/nvim-web-devicons', -- if you prefer nvim-web-devicons
-   	'https://github.com/MeanderingProgrammer/render-markdown.nvim'
-}
-
--- Oil is file explorer. use as :Oil  if you want to go to upper level use -
-require("oil").setup()
+vim.pack.add({
+  'https://github.com/neovim/nvim-lspconfig.git',
+  'https://github.com/nvim-telescope/telescope.nvim',
+  'https://github.com/nvim-lua/plenary.nvim',
+  'https://github.com/nvim-mini/mini.nvim',
+  'https://github.com/MeanderingProgrammer/render-markdown.nvim',
+})
 
 -- Telescope setup and settings--------------------
 require("telescope").setup({})
@@ -46,10 +38,10 @@ vim.keymap.set("n", "<leader>fg", builtin.live_grep)
 vim.keymap.set("n", "<leader>fb", builtin.buffers)
 -- ================================================
 
--- markdown link add:
+-- markdown link add (now inserts plain file path)
 local builtin = require("telescope.builtin")
 
-local function insert_markdown_link()
+local function insert_file_path()
   builtin.find_files({
     attach_mappings = function(prompt_bufnr, map)
       local actions = require("telescope.actions")
@@ -61,14 +53,13 @@ local function insert_markdown_link()
 
         if not selection then return end
 
-        local path = selection[1]
+        -- get file path
+        local path = vim.fn.fnamemodify(selection[1], ":~") -- use "~/" style path
+        -- alternatively absolute path:
+        -- local path = vim.fn.fnamemodify(selection[1], ":p")
 
-        -- extract filename for display text
-        local name = vim.fn.fnamemodify(path, ":t")
-
-        local md = string.format("[%s](%s)", name, path)
-
-        vim.api.nvim_put({ md }, "c", false, true)
+        -- insert into buffer at cursor
+        vim.api.nvim_put({ path }, "c", false, true)
       end
 
       map("i", "<CR>", open_and_insert)
@@ -79,11 +70,13 @@ local function insert_markdown_link()
   })
 end
 
--- Insert markdown style link of file without adding [name](~/name) etc. Just leader ml
-vim.keymap.set("n", "<leader>ml", insert_markdown_link, { desc = "Insert markdown link" })
+-- keymap
+vim.keymap.set("n", "<leader>ml", insert_file_path, { desc = "Insert file path" })
 
 -- go to file while on the link with gx
 vim.keymap.set("n", "gx", function()
   local file = vim.fn.expand("<cfile>")
   vim.cmd("edit " .. file)
 end, { desc = "Open file under cursor" })
+-- ==================================================================
+
