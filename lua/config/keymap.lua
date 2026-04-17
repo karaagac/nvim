@@ -41,3 +41,37 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.keymap.set("n", "q", "<cmd>close<CR>", { buffer = true, desc = "Close Oil float" })
   end,
 })
+
+
+-- search current file markdown headers
+vim.keymap.set("n", "<leader>mh", function()
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+
+  local headings = {}
+
+  for i, line in ipairs(lines) do
+    local level, title = line:match("^(#+)%s+(.+)")
+    if level and title then
+      table.insert(headings, {
+        text = string.rep("  ", #level - 1) .. title,
+        lnum = i,
+      })
+    end
+  end
+
+  require("fzf-lua").fzf_exec(
+    vim.tbl_map(function(h)
+      return string.format("%s:%d", h.text, h.lnum)
+    end, headings),
+    {
+      prompt = "Markdown headings> ",
+      actions = {
+        ["default"] = function(selected)
+          local item = selected[1]
+          local lnum = tonumber(item:match(":(%d+)$"))
+          vim.api.nvim_win_set_cursor(0, { lnum, 0 })
+        end,
+      },
+    }
+  )
+end, { desc = "Search Markdown headings in current file" })
