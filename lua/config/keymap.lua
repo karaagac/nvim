@@ -75,3 +75,26 @@ vim.keymap.set("n", "<leader>mh", function()
     }
   )
 end, { desc = "Search Markdown headings in current file" })
+
+
+-- search links and open with browser
+vim.keymap.set("n", "<leader>gl", function()
+  local file = vim.fn.expand("~/snippets/bookmarks")
+  local lines = vim.fn.readfile(file)
+
+  require("fzf-lua").fzf_exec(lines, {
+    prompt = "Links> ",
+    actions = {
+      ["default"] = function(selected)
+        local line = selected[1]
+
+        -- extract URL before ;;
+        local url = line:match("^(.-);;"):gsub("%s+", "")
+
+        if url then
+          vim.fn.jobstart({ "open", url }, { detach = true }) -- macOS
+        end
+      end,
+    },
+  })
+end, { desc = "Search tagged links and open URL" })

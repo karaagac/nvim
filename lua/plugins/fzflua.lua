@@ -14,22 +14,22 @@ return{
       "<leader>ff", function()  require('fzf-lua').files() end,
       desc = "Find files in current working directorys"
     },
-    { -- find files in ~/notes directory 
-      "<leader>fn", function()  require('fzf-lua').files({cwd='~/notes'}) end,
-      desc = "Find files in notes folder"
-    },
-    { -- find files in ~/dotfiles directory 
-      "<leader>fd", function()  require('fzf-lua').files({cwd='~/dotfiles'}) end,
-      desc = "Find files in ~/dotfiles folder"
-    },
+-- { -- find files in ~/notes directory 
+--   "<leader>fn", function()  require('fzf-lua').files({cwd='~/notes'}) end,
+--   desc = "Find files in notes folder"
+-- },
+--  { -- find files in ~/dotfiles directory 
+--    "<leader>fd", function()  require('fzf-lua').files({cwd='~/dotfiles'}) end,
+--    desc = "Find files in ~/dotfiles folder"
+--  },
     { -- General live grep
       "<leader>fg", function()  require('fzf-lua').live_grep() end,
       desc = "Live grep current working directorys"
     },
-    { -- Grep all files in ~/notes
-      "<leader>fn", function()  require('fzf-lua').live_grep({cwd='~/notes'}) end,
-      desc = "Live grep notes"
-    },
+--  { -- Grep all files in ~/notes
+--    "<leader>fn", function()  require('fzf-lua').live_grep({cwd='~/notes'}) end,
+--    desc = "Live grep notes"
+--  },
     -- ===========Other Functions===============================
     { -- Find Keymappings
       "<leader>fk", function()  require('fzf-lua').keymaps()
