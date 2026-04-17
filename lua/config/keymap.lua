@@ -100,4 +100,25 @@ vim.keymap.set("n", "<leader>gl", function()
   })
 end, { desc = "Search tagged links and open URL" })
 
+-- cd into directories with leader + cd
+vim.keymap.set("n", "<leader>cd", function()
+  local cwd = vim.fn.getcwd()
 
+  -- recursively list all directories under cwd
+  local dirs = vim.fn.systemlist("fd --type d . " .. vim.fn.shellescape(cwd))
+
+  require("fzf-lua").fzf_exec(dirs, {
+    prompt = "Dirs> ",
+    cwd = cwd,
+
+    actions = {
+      ["default"] = function(selected)
+        local dir = selected[1]
+        if not dir then return end
+
+        vim.cmd("cd " .. vim.fn.fnameescape(dir))
+        print("cd -> " .. dir)
+      end,
+    },
+  })
+end, { desc = "CD into any subdirectory (fzf)" })
