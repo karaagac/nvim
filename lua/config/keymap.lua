@@ -20,6 +20,7 @@ vim.keymap.set("n", "gf", function()
     vim.fn.expand("~/Downloads"),
     vim.fn.expand("~/.config/nvim"),
     vim.fn.expand("~/notes"),
+    vim.fn.expand("~/snippets"),
   }
 
   require("fzf-lua").fzf_exec(dirs, {
@@ -98,3 +99,5 @@ vim.keymap.set("n", "<leader>gl", function()
     },
   })
 end, { desc = "Search tagged links and open URL" })
+
+
