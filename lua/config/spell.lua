@@ -1,3 +1,4 @@
+-- Spell checking settins. This file needs to be required in ~/.config/nvim/init.lua
 -- Default: no spell
 vim.opt.spell = false
 
