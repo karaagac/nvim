@@ -19,7 +19,7 @@ return{
       desc = "Find files in notes folder"
     },
     { -- find files in ~/dotfiles directory 
-      "<leader>fc", function()  require('fzf-lua').files({cwd='~/dotfiles'}) end,
+      "<leader>fd", function()  require('fzf-lua').files({cwd='~/dotfiles'}) end,
       desc = "Find files in ~/dotfiles folder"
     },
     { -- General live grep
@@ -27,9 +27,10 @@ return{
       desc = "Live grep current working directorys"
     },
     { -- Grep all files in ~/notes
-      "<leader>sn", function()  require('fzf-lua').live_grep({cwd='~/notes'}) end,
+      "<leader>fn", function()  require('fzf-lua').live_grep({cwd='~/notes'}) end,
       desc = "Live grep notes"
     },
+    -- ===========Other Functions===============================
     { -- Find Keymappings
       "<leader>fk", function()  require('fzf-lua').keymaps()
       end,
@@ -64,6 +65,15 @@ return{
       "<leader>/", function()  require('fzf-lua').lgrep_curbuf()
       end,
       desc = "Live grep/search current buffer"
+    },
+    { -- copy current file path
+      "<leader>fp",
+      function()
+        local path = vim.fn.expand("%:p:~")
+        vim.fn.setreg("+", path)
+        print("Copied: " .. path)
+      end,
+      desc = "Copy full file path"
     }
   }
 }
