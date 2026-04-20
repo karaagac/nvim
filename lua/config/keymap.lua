@@ -35,6 +35,7 @@ vim.keymap.set("n", "gf", function()
   })
 end, { desc = "Fuzzy cd into predefined folders" })
 
+
 -- use q to quit in Oil floating window
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "oil",
@@ -122,3 +123,22 @@ vim.keymap.set("n", "<leader>cd", function()
     },
   })
 end, { desc = "CD into any subdirectory (fzf)" })
+
+-- edit files directly
+vim.keymap.set("n", "<leader>ef", function()
+  local files = {
+    vim.fn.expand("~/notes/generalnotes/todo"),
+    vim.fn.expand("~/snippets/bookmarks"),
+
+      }
+
+  require("fzf-lua").fzf_exec(files, {
+    prompt = "Edit file> ",
+    actions = {
+      ["default"] = function(selected)
+        local file = vim.fn.expand(selected[1])
+        vim.cmd("edit " .. vim.fn.fnameescape(file))
+      end,
+    },
+  })
+end, { desc = "Open/Edit files directly " })

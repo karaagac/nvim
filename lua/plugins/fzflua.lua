@@ -7,8 +7,16 @@ return{
   ---@module "fzf-lua"
   ---@type fzf-lua.Config|{}
   ---@diagnostic disable: missing-fields
-  opts = {},
-  ---@diagnostic enable: missing-fields
+  opts = {
+        -- This applies specifically to the 'files' picker
+    files = {
+      formatter = "path.dirname_first",
+    },
+    -- If you want it to apply to 'git_files' as well, add it there:
+    git_files = {
+      formatter = "path.dirname_first",
+    },
+  },
   keys = {
     {
       "<leader>ff", function()  require('fzf-lua').files() end,
@@ -29,6 +37,10 @@ return{
     { -- Grep all files in ~/notes
       "<leader>gn", function()  require('fzf-lua').live_grep({cwd='~/notes'}) end,
       desc = "Live grep notes"
+    },
+    { -- Grep all files in ~/PlaywrightAutomation
+      "<leader>sp", function()  require('fzf-lua').live_grep({cwd='~/PlaywrightAutomation'}) end,
+      desc = "Live grep playwright automation framework"
     },
     -- ===========Other Functions===============================
     { -- Find Keymappings
