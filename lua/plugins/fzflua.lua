@@ -78,14 +78,63 @@ return{
       end,
       desc = "Live grep/search current buffer"
     },
-    { -- copy current file path
-      "<leader>fp",
+    -- choose file name or path to copy
+    {
+      "<leader>cc",
       function()
-        local path = vim.fn.expand("%:p:~")
-        vim.fn.setreg("+", path)
-        print("Copied: " .. path)
+        local parent = vim.fn.expand("%:p:h:t")
+        local file = vim.fn.expand("%:t")
+        local file_no_ext = vim.fn.expand("%:t:r")
+
+        local items = {
+          "parent-folder",
+          "filename",
+          "filename-no-ext",
+          "parent/filename",
+          "javac + java command",
+        }
+
+        local function get_value(choice)
+          if choice == "parent-folder" then
+            return parent
+          elseif choice == "filename" then
+            return file
+          elseif choice == "filename-no-ext" then
+            return file_no_ext
+          elseif choice == "parent/filename" then
+            return parent .. "/" .. file
+          elseif choice == "javac + java command" then
+            return string.format(
+              "javac %s/%s.java && java %s.%s",
+              parent,
+              file_no_ext,
+              parent,
+              file_no_ext
+            )
+          end
+        end
+
+        require("fzf-lua").fzf_exec(items, {
+          prompt = "Copy file info > ",
+
+          -- 👇 preview shows ONLY what will be copied
+          preview = function(choice)
+            local value = get_value(choice[1])
+            return "Will copy:\n\n" .. value
+          end,
+
+          actions = {
+            ["default"] = function(selected)
+              local choice = selected[1]
+              local result = get_value(choice)
+
+              vim.fn.setreg("+", result)
+              print("Copied: " .. result)
+            end,
+          },
+        })
       end,
-      desc = "Copy full file path"
+      desc = "Copy file info with preview"
     }
   }
 }

@@ -129,8 +129,8 @@ vim.keymap.set("n", "<leader>ef", function()
   local files = {
     vim.fn.expand("~/notes/generalnotes/todo"),
     vim.fn.expand("~/snippets/bookmarks"),
-
-      }
+    vim.fn.expand("~/.config/nvim/spell/en.utf-8.add"),
+  }
 
   require("fzf-lua").fzf_exec(files, {
     prompt = "Edit file> ",
@@ -142,3 +142,4 @@ vim.keymap.set("n", "<leader>ef", function()
     },
   })
 end, { desc = "Open/Edit files directly " })
+
