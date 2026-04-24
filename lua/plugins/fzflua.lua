@@ -35,11 +35,11 @@ return{
       desc = "Live grep current working directorys"
     },
     { -- Grep all files in ~/notes
-      "<leader>gn", function()  require('fzf-lua').live_grep({cwd='~/notes'}) end,
+      "<leader>sn", function()  require('fzf-lua').live_grep({cwd='~/notes'}) end,
       desc = "Live grep notes"
     },
     { -- Grep all files in ~/PlaywrightAutomation
-      "<leader>sp", function()  require('fzf-lua').live_grep({cwd='~/PlaywrightAutomation'}) end,
+      "<leader>sp", function()  require('fzf-lua').live_grep({cwd='~/PlaywrightAutomation/tests/'}) end,
       desc = "Live grep playwright automation framework"
     },
     -- ===========Other Functions===============================

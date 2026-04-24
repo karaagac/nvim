@@ -11,31 +11,6 @@ vim.keymap.set("n", "gx", function()
 end, { desc = "Open file under cursor in nvim" })
 
 
--- cd into below folders
-vim.keymap.set("n", "gf", function()
-  local dirs = {
-    vim.fn.expand("~/Documents"),
-    vim.fn.expand("~/dotfiles"),
-    vim.fn.expand("~/Desktop"),
-    vim.fn.expand("~/Downloads"),
-    vim.fn.expand("~/.config/nvim"),
-    vim.fn.expand("~/notes"),
-    vim.fn.expand("~/snippets"),
-  }
-
-  require("fzf-lua").fzf_exec(dirs, {
-    prompt = "CD to folder> ",
-    actions = {
-      ["default"] = function(selected)
-        local dir = vim.fn.expand(selected[1])
-        vim.cmd("cd " .. vim.fn.fnameescape(dir))
-        print("cd → " .. dir)
-      end,
-    },
-  })
-end, { desc = "Fuzzy cd into predefined folders" })
-
-
 -- use q to quit in Oil floating window
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "oil",
@@ -80,7 +55,7 @@ end, { desc = "Search Markdown headings in current file" })
 
 
 -- search links and open with browser
-vim.keymap.set("n", "<leader>gl", function()
+vim.keymap.set("n", "<leader>ol", function()
   local file = vim.fn.expand("~/snippets/bookmarks")
   local lines = vim.fn.readfile(file)
 
@@ -101,35 +76,13 @@ vim.keymap.set("n", "<leader>gl", function()
   })
 end, { desc = "Search tagged links and open URL" })
 
--- cd into directories with leader + cd
-vim.keymap.set("n", "<leader>cd", function()
-  local cwd = vim.fn.getcwd()
-
-  -- recursively list all directories under cwd
-  local dirs = vim.fn.systemlist("fd --type d . " .. vim.fn.shellescape(cwd))
-
-  require("fzf-lua").fzf_exec(dirs, {
-    prompt = "Dirs> ",
-    cwd = cwd,
-
-    actions = {
-      ["default"] = function(selected)
-        local dir = selected[1]
-        if not dir then return end
-
-        vim.cmd("cd " .. vim.fn.fnameescape(dir))
-        print("cd -> " .. dir)
-      end,
-    },
-  })
-end, { desc = "CD into any subdirectory (fzf)" })
-
 -- edit files directly
-vim.keymap.set("n", "<leader>ef", function()
+vim.keymap.set("n", "<leader>ss", function()
   local files = {
     vim.fn.expand("~/notes/generalnotes/todo"),
     vim.fn.expand("~/snippets/bookmarks"),
     vim.fn.expand("~/.config/nvim/spell/en.utf-8.add"),
+    vim.fn.expand("~/snippets/.snippetrc"),
   }
 
   require("fzf-lua").fzf_exec(files, {
@@ -142,4 +95,70 @@ vim.keymap.set("n", "<leader>ef", function()
     },
   })
 end, { desc = "Open/Edit files directly " })
+
+
+-- search and yank results from .snippetrc file
+vim.keymap.set("n", "<leader>ys", function()
+  local file = vim.fn.expand("~/snippets/.snippetrc")
+
+  require("fzf-lua").fzf_exec(
+    "rg --no-heading --line-number --column --smart-case {q} "
+      .. vim.fn.shellescape(file)
+      .. " || cat " .. vim.fn.shellescape(file),
+    {
+      prompt = "Snippet search> ",
+      reload = true,
+      actions = {
+        ["default"] = function(selected)
+          if not selected or #selected == 0 then return end
+
+          local entry = selected[1]
+
+          local text = entry:match("^[^:]+:%d+:%d+:(.*)$") or entry
+
+          local before = text:match("^(.-)%s*;;")
+          if not before then
+            print("No ';;' found")
+            return
+          end
+
+          vim.fn.setreg("+", before)
+          print("Copied: " .. before)
+        end,
+      },
+    }
+  )
+end, { desc = "Search snippet and copy before ;; to clipboard" })
+
+vim.keymap.set("n", "<leader>jf", function()
+  local target_folders = {
+    "~/notes/",
+    "~/.config/nvim/",
+    "~/PlaywrightAutomation/",
+  }
+
+  -- Start with the base command
+  local cmd = "printf '%s\n'"
+  
+  -- Append each path as a separate escaped argument
+  for _, path in ipairs(target_folders) do
+    cmd = cmd .. " " .. vim.fn.shellescape(vim.fn.expand(path))
+  end
+
+  require("fzf-lua").fzf_exec(cmd, {
+    prompt = "Jump to folder> ",
+    actions = {
+      ["default"] = function(selected)
+        if not selected or #selected == 0 then return end
+        local target_dir = selected[1]
+        if vim.fn.isdirectory(target_dir) == 1 then
+          vim.api.nvim_set_current_dir(target_dir)
+          print("Changed directory to: " .. target_dir)
+        else
+          print("Error: Directory does not exist: " .. target_dir)
+        end
+      end,
+    },
+  })
+end, { desc = "FZF: Jump to hardcoded project folders" })
 
