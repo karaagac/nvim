@@ -77,7 +77,7 @@ vim.keymap.set("n", "<leader>ol", function()
 end, { desc = "Search tagged links and open URL" })
 
 -- edit files directly
-vim.keymap.set("n", "<leader>ss", function()
+vim.keymap.set("n", "<leader>ef", function()
   local files = {
     vim.fn.expand("~/notes/generalnotes/todo"),
     vim.fn.expand("~/snippets/bookmarks"),
