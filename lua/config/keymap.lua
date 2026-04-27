@@ -162,3 +162,7 @@ vim.keymap.set("n", "<leader>jf", function()
   })
 end, { desc = "FZF: Jump to hardcoded project folders" })
 
+-- list functions in file
+vim.keymap.set("n", "<leader>O", function()
+  require("fzf-lua").lsp_document_symbols()
+end, { desc = "List functions/symbols in file" })
