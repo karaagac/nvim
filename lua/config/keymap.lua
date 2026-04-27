@@ -54,7 +54,7 @@ vim.keymap.set("n", "<leader>mh", function()
 end, { desc = "Search Markdown headings in current file" })
 
 
--- search links and open with browser
+-- search bookmarks file and open links in browser
 vim.keymap.set("n", "<leader>ol", function()
   local file = vim.fn.expand("~/snippets/bookmarks")
   local lines = vim.fn.readfile(file)
@@ -64,12 +64,24 @@ vim.keymap.set("n", "<leader>ol", function()
     actions = {
       ["default"] = function(selected)
         local line = selected[1]
-
-        -- extract URL before ;;
-        local url = line:match("^(.-);;"):gsub("%s+", "")
-
+        local url = line:match("^(.-);;")
+        
         if url then
-          vim.fn.jobstart({ "open", url }, { detach = true }) -- macOS
+          url = url:gsub("%s+", "")
+          local command = nil
+
+          if vim.fn.has("mac") == 1 then
+            command = {"open", url}
+          elseif vim.fn.executable("xdg-open") == 1 then
+            command = {"xdg-open", url}
+          else
+            print("Error: No opener found (install xdg-utils?)")
+            return
+          end
+
+          vim.fn.jobstart(command, { detach = true })
+        else
+          print("No URL found in line")
         end
       end,
     },
